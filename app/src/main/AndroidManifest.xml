@@ -23,7 +23,12 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".FoodList" />
         <activity android:name=".OrderStatus" />
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
+
+        <service
+            android:name=".Service.ListenOrder"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

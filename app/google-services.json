@@ -47,6 +47,14 @@
           }
         },
         {
+          "client_id": "937053316971-romo8pk24g7l9nv2omumm31utttdjlfs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aburubban.halalfoodfinder",
+            "certificate_hash": "2b0ff3d06eb5d652801be7d9984c395f838171ab"
+          }
+        },
+        {
           "client_id": "937053316971-kb86fh9ksq2aj5gcadanpkpo86fcdr8j.apps.googleusercontent.com",
           "client_type": 3
         }
