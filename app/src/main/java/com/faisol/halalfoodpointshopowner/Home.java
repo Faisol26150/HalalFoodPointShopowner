@@ -1,6 +1,7 @@
 package com.faisol.halalfoodpointshopowner;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -27,7 +28,7 @@ import android.widget.Toast;
 import com.faisol.halalfoodpointshopowner.Common.Common;
 import com.faisol.halalfoodpointshopowner.Interface.ItemClickListener;
 import com.faisol.halalfoodpointshopowner.Model.Category;
-import com.faisol.halalfoodpointshopowner.Service.ListenOrder;
+import com.faisol.halalfoodpointshopowner.Model.Token;
 import com.faisol.halalfoodpointshopowner.ViewHolder.MenuViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -38,6 +39,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -48,6 +50,8 @@ import com.squareup.picasso.Picasso;
 import java.util.UUID;
 
 import info.hoang8f.widget.FButton;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -74,13 +78,23 @@ public class Home extends AppCompatActivity
 
     Uri saveUri;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // add this code
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Mitr.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
+
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Menu Management");
+        toolbar.setTitle("จัดการรายการอาหาร");
         setSupportActionBar(toolbar);
 
         // Init firebase
@@ -120,16 +134,22 @@ public class Home extends AppCompatActivity
         
         loadMenu();
 
-        //call Service
-        Intent service = new Intent(Home.this, ListenOrder.class);
-        startService(service);
+        //send token
+        updateToken(FirebaseInstanceId.getInstance().getToken());
 
+    }
+
+    private void updateToken(String token) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference("Tokens");
+        Token data = new Token(token,true); // false because this token send from Clien
+        tokens.child(Common.currentUser.getPhone()).setValue(data);
     }
 
     private void showDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
-        alertDialog.setTitle("Add new Category");
-        alertDialog.setMessage("Please fill full information");
+        alertDialog.setTitle("เพิ่มรายการอาหาร");
+        alertDialog.setMessage("กรุณากรอกรายละเอียดรายการอาหาร");
 
         LayoutInflater inflater = this.getLayoutInflater();
         View add_menu_layout = inflater.inflate(R.layout.add_new_menu_layout,null);
@@ -159,7 +179,7 @@ public class Home extends AppCompatActivity
 
 
         //set button
-        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("ยืนยัน", new DialogInterface.OnClickListener() {
             @Override
                 public void onClick(DialogInterface dialogInterface, int which) {
                 dialogInterface.dismiss();
@@ -167,13 +187,13 @@ public class Home extends AppCompatActivity
                 if (newCategory != null)
                 {
                     categories.push().setValue(newCategory);
-                    Snackbar.make(drawer,"New category "+newCategory.getName()+"was added",Snackbar.LENGTH_SHORT)
+                    Snackbar.make(drawer,"รายการอาหาร "+newCategory.getName()+"ถูกเพิ่มแล้ว",Snackbar.LENGTH_SHORT)
                             .show();
                 }
 
             }
         });
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("ยกเลิก", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 dialogInterface.dismiss();
@@ -187,7 +207,7 @@ public class Home extends AppCompatActivity
         if (saveUri != null)
         {
             final ProgressDialog mDialog = new ProgressDialog(this);
-            mDialog.setMessage("Uploading...");
+            mDialog.setMessage("กำลังอัพโหลด...");
             mDialog.show();
 
             String imageName = UUID.randomUUID().toString();
@@ -197,7 +217,7 @@ public class Home extends AppCompatActivity
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             mDialog.dismiss();
-                            Toast.makeText(Home.this, "Uploaded !!!",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Home.this, "อัพโหลดเรียบร้อย",Toast.LENGTH_SHORT).show();
                             imageFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
@@ -218,7 +238,7 @@ public class Home extends AppCompatActivity
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0*taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            mDialog.setMessage("Uploaded "+progress+"%");
+                            mDialog.setMessage("อัพโหลด "+progress+"%");
                         }
                     });
         }
@@ -231,7 +251,7 @@ public class Home extends AppCompatActivity
                 && data != null && data.getData() != null)
         {
             saveUri = data.getData();
-            btnSelect.setText("Image Selected!");
+            btnSelect.setText("เลือกรูปเรียบร้อย");
         }
     }
 
@@ -239,7 +259,7 @@ public class Home extends AppCompatActivity
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Select Picture"),Common.PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent,"เลือกรุปภาพ"),Common.PICK_IMAGE_REQUEST);
     }
 
     private void loadMenu() {
@@ -360,14 +380,14 @@ public class Home extends AppCompatActivity
         });
 
         categories.child(key).removeValue();
-        Toast.makeText(this, "Item deleted !!!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "ลบรายการอาหารเรียบร้อย", Toast.LENGTH_SHORT).show();
     }
 
     private void showUpdateDialog(final String key, final Category item) {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
-        alertDialog.setTitle("Update Category");
-        alertDialog.setMessage("Please fill full information");
+        alertDialog.setTitle("อัพเดทรายการอาหาร");
+        alertDialog.setMessage("กรุณากรอกรายละเอียดรายการอาหาร");
 
         LayoutInflater inflater = this.getLayoutInflater();
         View add_menu_layout = inflater.inflate(R.layout.add_new_menu_layout,null);
@@ -400,7 +420,7 @@ public class Home extends AppCompatActivity
 
 
         //set button
-        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("ยืนยัน", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 dialogInterface.dismiss();
@@ -410,7 +430,7 @@ public class Home extends AppCompatActivity
 
             }
         });
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("ยกเลิก", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 dialogInterface.dismiss();
@@ -424,7 +444,7 @@ public class Home extends AppCompatActivity
         if (saveUri != null)
         {
             final ProgressDialog mDialog = new ProgressDialog(this);
-            mDialog.setMessage("Uploading...");
+            mDialog.setMessage("กำลังอัพโหลด...");
             mDialog.show();
 
             String imageName = UUID.randomUUID().toString();
@@ -434,7 +454,7 @@ public class Home extends AppCompatActivity
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             mDialog.dismiss();
-                            Toast.makeText(Home.this, "Uploaded !!!",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Home.this, "อัพโหลดเรียบร้อย",Toast.LENGTH_SHORT).show();
                             imageFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
@@ -455,7 +475,7 @@ public class Home extends AppCompatActivity
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0*taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            mDialog.setMessage("Uploaded "+progress+"%");
+                            mDialog.setMessage("อัพโหลด "+progress+"%");
                         }
                     });
         }

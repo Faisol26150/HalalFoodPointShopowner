@@ -1,6 +1,7 @@
 package com.faisol.halalfoodpointshopowner;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import info.hoang8f.widget.FButton;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SignIn extends AppCompatActivity {
 
@@ -29,8 +32,19 @@ public class SignIn extends AppCompatActivity {
     DatabaseReference users;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // add this code
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Mitr.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
+
         setContentView(R.layout.activity_sign_in);
         edtPassword = (MaterialEditText)findViewById(R.id.edtPassword);
         edtPhone = (MaterialEditText)findViewById(R.id.edtPhone);
@@ -50,7 +64,7 @@ public class SignIn extends AppCompatActivity {
 
     private void signInUser(String phone, String password) {
         final ProgressDialog mDialog = new ProgressDialog(SignIn.this);
-        mDialog.setMessage("Please waiting...");
+        mDialog.setMessage("กรุณารอสักครู่...");
         mDialog.show();
 
         final String localPhone = phone;
@@ -73,15 +87,15 @@ public class SignIn extends AppCompatActivity {
                             finish();
                         }
                         else
-                            Toast.makeText(SignIn.this,"Wrong password !",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignIn.this,"รหัสผ่านไม่ถูกต้อง",Toast.LENGTH_SHORT).show();
                     }
                     else
-                        Toast.makeText(SignIn.this,"Please login with Staff account",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignIn.this,"กรุณาเข้าสู่ระบบด้วยรหัสเจ้าของร้าน",Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
                     mDialog.dismiss();
-                    Toast.makeText(SignIn.this,"User not exist in Database",Toast.LENGTH_SHORT ).show();
+                    Toast.makeText(SignIn.this,"ไม่มีผู้ใช้นี้ในระบบ",Toast.LENGTH_SHORT ).show();
                 }
 
             }

@@ -12,7 +12,8 @@ import com.faisol.halalfoodpointshopowner.R;
  * Created by Abu Rubban on 03-Sep-18.
  */
 
-public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener {
+public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+        View.OnCreateContextMenuListener {
     public TextView txtOrderId,txtOrderStatus,txtOrderPhone,txtOrderAddress;
     private ItemClickListener itemClickListener;
 
@@ -42,9 +43,10 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
     @Override
     public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-        contextMenu.setHeaderTitle("Select The Action");
+        contextMenu.setHeaderTitle("กรุณาเลือกสถานะ");
 
-        contextMenu.add(0,0,getAdapterPosition(),"Update");
-        contextMenu.add(0,1,getAdapterPosition(),"Update");
+        contextMenu.add(0,0,getAdapterPosition(),"อัพเดท");
+        contextMenu.add(0,1,getAdapterPosition(),"ลบ");
     }
+
 }

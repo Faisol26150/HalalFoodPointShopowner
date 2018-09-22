@@ -46,7 +46,7 @@ public class MenuViewHolder extends RecyclerView.ViewHolder implements
 
     @Override
     public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-        contextMenu.setHeaderTitle("Select the action");
+        contextMenu.setHeaderTitle("กรุณาเลือกสถานะ");
 
         contextMenu.add(0,0,getAdapterPosition(), Common.UPDATE);
         contextMenu.add(0,1,getAdapterPosition(), Common.DELETE);

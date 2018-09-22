@@ -20,7 +20,7 @@
         <com.rengwuxian.materialedittext.MaterialEditText
 
             android:id="@+id/edtPhone"
-            android:hint="Phone Number"
+            android:hint="รหัสร้านอาหาร"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@android:color/black"
@@ -38,7 +38,7 @@
         <com.rengwuxian.materialedittext.MaterialEditText
 
             android:id="@+id/edtPassword"
-            android:hint="Password"
+            android:hint="รหัสผ่าน"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@android:color/black"

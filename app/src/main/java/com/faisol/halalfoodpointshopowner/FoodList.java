@@ -1,6 +1,7 @@
 package com.faisol.halalfoodpointshopowner;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -38,6 +39,8 @@ import com.squareup.picasso.Picasso;
 import java.util.UUID;
 
 import info.hoang8f.widget.FButton;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class FoodList extends AppCompatActivity {
 
@@ -63,10 +66,20 @@ public class FoodList extends AppCompatActivity {
     Food newFood;
     Uri saveUri;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // add this code
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Mitr.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
+
         setContentView(R.layout.activity_food_list);
 
         //firebase
@@ -102,8 +115,8 @@ public class FoodList extends AppCompatActivity {
     private void showAddFoodDialog() {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(FoodList.this);
-        alertDialog.setTitle("Add new Food");
-        alertDialog.setMessage("Please fill full information");
+        alertDialog.setTitle("เพิ่มเมนูอาหาร");
+        alertDialog.setMessage("กรุณากรอกรายละเอียดเมนูอาหาร");
 
         LayoutInflater inflater = this.getLayoutInflater();
         View add_menu_layout = inflater.inflate(R.layout.add_new_food_layout,null);
@@ -137,7 +150,7 @@ public class FoodList extends AppCompatActivity {
 
 
         //set button
-        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("ยืนยัน", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 dialogInterface.dismiss();
@@ -145,13 +158,13 @@ public class FoodList extends AppCompatActivity {
                 if (newFood != null)
                 {
                     FoodList.push().setValue(newFood);
-                    Snackbar.make(rootLayout,"New category "+newFood.getName()+"was added",Snackbar.LENGTH_SHORT)
+                    Snackbar.make(rootLayout,"เมนู "+newFood.getName()+"ถูกเพิ่มเรียบร้อย",Snackbar.LENGTH_SHORT)
                             .show();
                 }
 
             }
         });
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("ยกเลิก", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 dialogInterface.dismiss();
@@ -165,7 +178,7 @@ public class FoodList extends AppCompatActivity {
         if (saveUri != null)
         {
             final ProgressDialog mDialog = new ProgressDialog(this);
-            mDialog.setMessage("Uploading...");
+            mDialog.setMessage("กำลังอัพโหลด...");
             mDialog.show();
 
             String imageName = UUID.randomUUID().toString();
@@ -175,7 +188,7 @@ public class FoodList extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             mDialog.dismiss();
-                            Toast.makeText(FoodList.this, "Uploaded !!!",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FoodList.this, "อัพโหลดเรียบร้อย",Toast.LENGTH_SHORT).show();
                             imageFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
@@ -202,7 +215,7 @@ public class FoodList extends AppCompatActivity {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0*taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            mDialog.setMessage("Uploaded "+progress+"%");
+                            mDialog.setMessage("อัพโหลด "+progress+"%");
                         }
                     });
         }
@@ -212,7 +225,7 @@ public class FoodList extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Select Picture"), Common.PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent,"เลือกรูปภาพ"), Common.PICK_IMAGE_REQUEST);
     }
 
 
@@ -248,7 +261,7 @@ public class FoodList extends AppCompatActivity {
                 && data != null && data.getData() != null)
         {
             saveUri = data.getData();
-            btnSelect.setText("Image Selected!");
+            btnSelect.setText("เลือกรูปเรียบร้อย");
         }
     }
 
@@ -273,8 +286,8 @@ public class FoodList extends AppCompatActivity {
     private void showUpdateFoodDialog(final String key, final Food item) {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(FoodList.this);
-        alertDialog.setTitle("Edit Food");
-        alertDialog.setMessage("Please fill full information");
+        alertDialog.setTitle("แก้ไขเมนูอาหาร");
+        alertDialog.setMessage("กรุณากรอกรายละเอียดเมนูอาหาร");
 
         LayoutInflater inflater = this.getLayoutInflater();
         View add_menu_layout = inflater.inflate(R.layout.add_new_food_layout,null);
@@ -314,7 +327,7 @@ public class FoodList extends AppCompatActivity {
 
 
         //set button
-        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("ยืนยัน", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 dialogInterface.dismiss();
@@ -327,13 +340,13 @@ public class FoodList extends AppCompatActivity {
                     item.setDiscont(edtDiscount.getText().toString());
 
                     FoodList.child(key).setValue(item);
-                    Snackbar.make(rootLayout," Food "+item.getName()+"was edited",Snackbar.LENGTH_SHORT)
+                    Snackbar.make(rootLayout," เมนู "+item.getName()+"แก้ไขเรียบร้อย",Snackbar.LENGTH_SHORT)
                             .show();
 
 
             }
         });
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("ยกเลิก", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 dialogInterface.dismiss();
@@ -348,7 +361,7 @@ public class FoodList extends AppCompatActivity {
         if (saveUri != null)
         {
             final ProgressDialog mDialog = new ProgressDialog(this);
-            mDialog.setMessage("Uploading...");
+            mDialog.setMessage("กำลังอัพโหลด...");
             mDialog.show();
 
             String imageName = UUID.randomUUID().toString();
@@ -358,7 +371,7 @@ public class FoodList extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             mDialog.dismiss();
-                            Toast.makeText(FoodList.this, "Uploaded !!!",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FoodList.this, "อัพโหลดเรียบร้อย",Toast.LENGTH_SHORT).show();
                             imageFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
@@ -379,7 +392,7 @@ public class FoodList extends AppCompatActivity {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0*taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            mDialog.setMessage("Uploaded "+progress+"%");
+                            mDialog.setMessage("อัพโหลด "+progress+"%");
                         }
                     });
         }

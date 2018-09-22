@@ -17,13 +17,13 @@
         <com.rengwuxian.materialedittext.MaterialEditText
 
             android:id="@+id/edtName"
-            android:hint="Name"
+            android:hint="ชื่อเมนู"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@color/colorPrimary"
             android:text=""
             android:textColor="@color/colorPrimary"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:inputType="text"
             app:met_baseColor="@color/colorPrimary"
             app:met_floatingLabel="highlight"
@@ -33,13 +33,13 @@
         <com.rengwuxian.materialedittext.MaterialEditText
 
             android:id="@+id/edtDescription"
-            android:hint="Description"
+            android:hint="คำอธิบาย"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@color/colorPrimary"
             android:text=""
             android:textColor="@color/colorPrimary"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:inputType="textMultiLine"
             app:met_baseColor="@color/colorPrimary"
             app:met_floatingLabel="highlight"
@@ -49,13 +49,13 @@
         <com.rengwuxian.materialedittext.MaterialEditText
 
             android:id="@+id/edtPrice"
-            android:hint="Price"
+            android:hint="ราคา"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@color/colorPrimary"
             android:text=""
             android:textColor="@color/colorPrimary"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:inputType="number"
             app:met_baseColor="@color/colorPrimary"
             app:met_floatingLabel="highlight"
@@ -65,13 +65,13 @@
         <com.rengwuxian.materialedittext.MaterialEditText
 
             android:id="@+id/edtDiscount"
-            android:hint="Discount"
+            android:hint="ส่วนลด"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@color/colorPrimary"
             android:text=""
             android:textColor="@color/colorPrimary"
-            android:textSize="24dp"
+            android:textSize="22dp"
             android:inputType="number"
             app:met_baseColor="@color/colorPrimary"
             app:met_floatingLabel="highlight"
@@ -88,7 +88,7 @@
 
             <info.hoang8f.widget.FButton
                 android:id="@+id/btnSelect"
-                android:text="SELECT"
+                android:text="เลือกรูปภาพ"
                 android:textColor="@android:color/white"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
@@ -106,7 +106,7 @@
 
             <info.hoang8f.widget.FButton
                 android:id="@+id/btnUpload"
-                android:text="UPLOAD"
+                android:text="อัพโหลด"
                 android:textColor="@android:color/white"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
