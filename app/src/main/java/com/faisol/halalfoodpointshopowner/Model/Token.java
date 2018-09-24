@@ -5,8 +5,8 @@ package com.faisol.halalfoodpointshopowner.Model;
  */
 
 public class Token {
-    private  String token;
-    private boolean isServerToken;
+    public   String token;
+    public boolean isServerToken;
 
     public Token(){
 
