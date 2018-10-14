@@ -23,11 +23,13 @@ public class Common {
 
     public  static String convertCodeToStatus(String code)
     {
-        if (code.equals("0"))
+        if(code.equals("0"))
+            return "รอการอัพเดทสถานะ";
+        else if(code.equals("1"))
             return "รับออเดอร์";
-        else if (code.equals("1"))
+        else if (code.equals("2"))
             return "อยู่ระหว่างการส่ง";
         else
-            return "่จ่ายเงินเรียบร้อย";
+            return "จ่ายเงินเรียบร้อย";
     }
 }

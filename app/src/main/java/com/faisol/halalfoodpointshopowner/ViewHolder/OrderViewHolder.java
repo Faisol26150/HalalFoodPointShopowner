@@ -17,7 +17,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder{
     public TextView txtOrderId,txtOrderStatus,txtOrderPhone,txtOrderAddress;
 
 
-    public Button btnEdit,btnRemove,btnDetail;
+    public Button btnEdit,btnRemove,btnDetail,btnColor,btnNext;
 
     public OrderViewHolder(View itemView) {
         super(itemView);
@@ -30,6 +30,9 @@ public class OrderViewHolder extends RecyclerView.ViewHolder{
         btnEdit = (Button) itemView.findViewById(R.id.btnEdit);
         btnRemove = (Button) itemView.findViewById(R.id.btnRemove);
         btnDetail = (Button) itemView.findViewById(R.id.btnDetail);
+
+
+        btnColor = (Button) itemView.findViewById(R.id.btnColor1);
 
     }
 

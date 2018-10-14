@@ -3,6 +3,7 @@ package com.faisol.halalfoodpointshopowner;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.faisol.halalfoodpointshopowner.Common.Common;
@@ -51,6 +53,8 @@ public class OrderStatus extends AppCompatActivity {
 
     APIService mService;
 
+
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -74,6 +78,7 @@ public class OrderStatus extends AppCompatActivity {
 
         //Init Service
         mService = Common.getFCMClient();
+
         
         //Init
         recyclerView = (RecyclerView)findViewById(R.id.listOrders);
@@ -122,6 +127,19 @@ public class OrderStatus extends AppCompatActivity {
                     }
                 });
 
+                if (model.getStatus().contentEquals("0")) {
+                    viewHolder.btnColor.setBackgroundColor(Color.WHITE);
+                }
+                else if (model.getStatus().contentEquals("1")){
+                    viewHolder.btnColor.setBackgroundColor(Color.RED);
+                }
+                else if (model.getStatus().contentEquals("2")){
+                    viewHolder.btnColor.setBackgroundColor(Color.YELLOW);
+                }
+                else
+                    viewHolder.btnColor.setBackgroundColor(Color.GREEN);
+
+
             }
         };
         adapter.notifyDataSetChanged();
@@ -144,7 +162,7 @@ public class OrderStatus extends AppCompatActivity {
         final View view = inflater.inflate(R.layout.update_order_layout,null);
 
         spinner = (MaterialSpinner)view.findViewById(R.id.statusSpinner);
-        spinner.setItems("รับออเดอร์","อยู่ระหว่างการส่ง","จ่ายเงินเรียบร้อย");
+        spinner.setItems("เลือกสถานะ","รับออเดอร์","อยู่ระหว่างการส่ง","จ่ายเงินเรียบร้อย");
 
         alerDialog.setView(view);
 
@@ -182,7 +200,7 @@ public class OrderStatus extends AppCompatActivity {
                         {
                             Token token = postSnapShot.getValue(Token.class);
 
-                            Notification notification = new Notification("Kaw-E-Mai","รายการสั่งซื้อของคุณ"+key+"มีการอัพเดท");
+                            Notification notification = new Notification("Kaw-E-Mai","รายการสั่งซื้อของคุณ" +key+ "มีการอัพเดท");
                             Sender content = new Sender(token.getToken(),notification);
 
                             mService.sendNotification(content)
