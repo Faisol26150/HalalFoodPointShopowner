@@ -162,7 +162,7 @@ public class OrderStatus extends AppCompatActivity {
         final View view = inflater.inflate(R.layout.update_order_layout,null);
 
         spinner = (MaterialSpinner)view.findViewById(R.id.statusSpinner);
-        spinner.setItems("เลือกสถานะ","รับออเดอร์","อยู่ระหว่างการส่ง","จ่ายเงินเรียบร้อย");
+        spinner.setItems("เลือกสถานะ","รับออเดอร์","อยู่ระหว่างการส่ง","จัดส่งเรียบร้อย");
 
         alerDialog.setView(view);
 
